@@ -1,4 +1,4 @@
-%% * Homework3_1*
+%% *Homework3_1 *
 %% Clear workspace
 close all;
 clear;
@@ -39,14 +39,17 @@ for i = 1:3
 end
 
 %% Homework2
-w_2 = linspace(0, pi, 301);
-
+% In this task we want to show how impulse input responds to our filter
+% by 3 different methods
+%
+% Firstly, we declare essential variables
 for j = 1:3
     x = [1 zeros(1, 300)];
     w1 = 0;
     w2 = 0;
     y = zeros(1, 301);
-
+    %%%
+    % Here we show output by differential equation and plot it
     for i = 1:301
         y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
         w2 = w1;
@@ -75,6 +78,8 @@ for j = 1:3
 
 end
 
+%%%
+% Here we simply filtered signal by filter we created and plot it
 for i = 1:3
     filtered_signal = filter(G, [1 -2 * R(i) .* cos(w0) R(i) .^ 2], x);
     figure('Name', 'Filtered Signal');
