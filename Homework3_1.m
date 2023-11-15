@@ -51,7 +51,7 @@ for j = 1:3
     %%%
     % Here we show output by differential equation and plot it
     for i = 1:301
-        y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
         w2 = w1;
         w1 = y(i);
     end
@@ -101,4 +101,55 @@ for i = 1:3
     xlabel('Time');
     ylabel('Phase');
     grid on;
+end
+
+%% Homework3
+
+for j = 1:3
+    x = 0.1 * randn(1, 301);
+    w1 = 0;
+    w2 = 0;
+    w21 = 0;
+    w11 = 0;
+    y = zeros(1, 301);
+    y1 = zeros(1, 301);
+    x1 = [1 zeros(1, 300)];
+
+    for i = 1:301
+        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        y1(i) = -2 * R(j) * cos(w0) * w11 -R(j) ^ 2 * w21 + G * x1(i);
+        w2 = w1;
+        w1 = y(i);
+        w21 = w11;
+        w11 = y1(i);
+    end
+
+    figure('Name', 'Output');
+    subplot(3, 1, 1)
+    stem(y);
+    hold on;
+    stem(y1);
+    title('Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    legend('Noise', 'Impulse Response');
+    subplot(3, 1, 2)
+    stem(abs(y));
+    hold on;
+    stem(abs(y1));
+    title('Absolute of Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    legend('Noise', 'Impulse Response');
+    subplot(3, 1, 3)
+    stem(angle(y));
+    hold on;
+    stem(angle(y1));
+    title('Phase of Output');
+    xlabel('Time');
+    ylabel('Phase');
+    grid on;
+    legend('Noise', 'Impulse Response');
 end
