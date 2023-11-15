@@ -38,3 +38,62 @@ for i = 1:3
     grid on;
 end
 
+%% Homework2
+w_2 = linspace(0, pi, 301);
+
+for j = 1:3
+    x = [1 zeros(1, 300)];
+    w1 = 0;
+    w2 = 0;
+    y = zeros(1, 301);
+
+    for i = 1:301
+        y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        w2 = w1;
+        w1 = y(i);
+    end
+
+    figure('Name', 'Output');
+    subplot(3, 1, 1)
+    stem(y);
+    title('Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    subplot(3, 1, 2)
+    stem(abs(y));
+    title('Absolute of Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    subplot(3, 1, 3)
+    stem(angle(y));
+    title('Phase of Output');
+    xlabel('Time');
+    ylabel('Phase');
+    grid on;
+
+end
+
+for i = 1:3
+    filtered_signal = filter(G, [1 -2 * R(i) .* cos(w0) R(i) .^ 2], x);
+    figure('Name', 'Filtered Signal');
+    subplot(3, 1, 1)
+    stem(filtered_signal);
+    title('Filtered Signal');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    subplot(3, 1, 2)
+    stem(abs(filtered_signal));
+    title('Absolute of Filtered Signal');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    subplot(3, 1, 3)
+    stem(angle(filtered_signal));
+    title('Phase of Filtered Signal');
+    xlabel('Time');
+    ylabel('Phase');
+    grid on;
+end
