@@ -197,3 +197,56 @@ for j = 1:3
     grid on;
     legend('Filtered Noise', 'Noise');
 end
+
+%% Homework5
+
+mean_noise = sum(x) / 301;
+
+for j = 1:3
+    w1 = 0;
+    w2 = 0;
+    y = zeros(1, 301);
+    variance_noise = 0;
+
+    for i = 1:301
+        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        w2 = w1;
+        w1 = y(i);
+        mean_y = (y(i) + mean_y) / 301;
+        variance_noise = ((x(i) - mean_noise) ^ 2) / 301 + variance_noise;
+        variance_y = (y(i) -mean_y) ^ 2/301;
+    end
+
+    con = variance_y / variance_noise;
+    h = G / (sin(w0)) * (R(i) ^ n) * sin(w0 * n + w0);
+    h_2 = h .^ 2;
+
+    figure('Name', 'Noise');
+    subplot(3, 1, 1)
+    stem(h_2);
+    hold on;
+    stem(con);
+    title('Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    legend('H^2', 'Variances Division');
+    subplot(3, 1, 2)
+    stem(abs(h_2));
+    hold on;
+    stem(abs(con));
+    title('Absolute of Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    legend('H^2', 'Variances Division');
+    subplot(3, 1, 3)
+    stem(angle(h_2));
+    hold on;
+    stem(angle(con));
+    title('Phase of Output');
+    xlabel('Time');
+    ylabel('Phase');
+    grid on;
+    legend('h^2', 'Variances Division');
+end
