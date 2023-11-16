@@ -105,8 +105,9 @@ end
 
 %% Homework3
 
+x = 0.1 * randn(1, 301);
+
 for j = 1:3
-    x = 0.1 * randn(1, 301);
     w1 = 0;
     w2 = 0;
     w21 = 0;
@@ -152,4 +153,47 @@ for j = 1:3
     ylabel('Phase');
     grid on;
     legend('Noise', 'Impulse Response');
+end
+
+%% Homework4
+
+for j = 1:3
+    w1 = 0;
+    w2 = 0;
+    y = zeros(1, 301);
+
+    for i = 1:301
+        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        w2 = w1;
+        w1 = y(i);
+    end
+
+    figure('Name', 'Output');
+    subplot(3, 1, 1)
+    stem(y);
+    hold on;
+    stem(x);
+    title('Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    legend('Filtered Noise', 'Noise');
+    subplot(3, 1, 2)
+    stem(abs(y));
+    hold on;
+    stem(abs(x));
+    title('Absolute of Output');
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    legend('Filtered Noise', 'Noise');
+    subplot(3, 1, 3)
+    stem(angle(y));
+    hold on;
+    stem(angle(x));
+    title('Phase of Output');
+    xlabel('Time');
+    ylabel('Phase');
+    grid on;
+    legend('Filtered Noise', 'Noise');
 end
