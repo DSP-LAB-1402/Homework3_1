@@ -1,4 +1,4 @@
-%% *Homework3_1 *
+%% *Homework3_1*
 %% Clear workspace
 close all;
 clear;
