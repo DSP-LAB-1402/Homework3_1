@@ -23,10 +23,10 @@ for i = 1:3
     G = (1 - R(i)) * (1 - 2 * R(i) * cos(2 * w0) + R(i) ^ 2) ^ (0.5);
     w = linspace(0, pi, 500);
     H = freqz(G, [1 -2 * R(i) * cos(w0) R(i) ^ 2], w);
-    figure('Name', 'Impulse Response power 2');
+    figure('Name', 'Impulse Squared Response');
     subplot(2, 1, 1)
     plot(w, abs(H) .^ 2);
-    title('Absolute Impulse response power 2');
+    title('Absolute Impulse Squared Response');
     xlabel('Frequency');
     ylabel('Amplitude');
     xlim([0 pi]);
@@ -35,7 +35,7 @@ for i = 1:3
     grid on;
     subplot(2, 1, 2)
     plot(w, angle(H) * 2);
-    title('Phase of Impulse response power 2');
+    title('Phase of Impulse Squared Response');
     xlabel('Frequency');
     ylabel('Phase');
     xlim([0 pi]);
@@ -66,7 +66,7 @@ for j = 1:3
     figure('Name', 'Output');
     subplot(3, 1, 1)
     stem(y);
-    title(strcat('Diference Equation Output R =', string(R(j))));
+    title(strcat('Differential Equation Output R =', string(R(j))));
     xlabel('Time');
     ylabel('Amplitude');
     grid on;
@@ -130,12 +130,12 @@ for j = 1:3
     w2 = 0;
     y = zeros(1, 301);
     %%%
-    % Here we show output by differential equation and plot it
-    %
     % * PSD Noise is DC and also PSD for delta func. is DC.
     % * This is one of the reasons the noise after filter is cosine.
     % * Another reason is, this filter is kind of a band-pass filter
     % and lets some frequency pass
+    %
+    % Here we show output by differential equation and plot it
     for i = 1:301
         y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
         w2 = w1;
