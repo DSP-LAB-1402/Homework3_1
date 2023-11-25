@@ -49,8 +49,6 @@ end
 % by 3 different methods
 %
 % Firstly, we declare essential variables
-%
-% First we compute with differential equation
 for j = 1:3
     G = (1 - R(j)) * (1 - 2 * R(j) * cos(2 * w0) + R(j) ^ 2) ^ (0.5);
     x = [1 zeros(1, 300)];
@@ -68,7 +66,7 @@ for j = 1:3
     figure('Name', 'Output');
     subplot(3, 1, 1)
     stem(y);
-    title(strcat('Diference equetion Output R =', string(R(j))));
+    title(strcat('Diference Equation Output R =', string(R(j))));
     xlabel('Time');
     ylabel('Amplitude');
     grid on;
@@ -83,38 +81,12 @@ for j = 1:3
     n = 0:300;
     h = G / sin(w0) * R(j) .^ n .* sin(w0 * n + w0);
     stem(h)
-    title(strcat('direct compute Output R =', string(R(j))));
+    title(strcat('Direct Computed Output R =', string(R(j))));
     xlabel('Time');
     ylabel('Amplitude');
     grid on;
 end
 
-% %%%
-% % Here we simply filtered signal by filter we created and plot it
-% % ino nemidonam chieh
-% for i = 1:3
-%     filtered_signal = filter(G, [1 -2 * R(i) .* cos(w0) R(i) .^ 2], x);
-%     figure('Name', 'Filtered Signal');
-%     subplot(3, 1, 1)
-%     stem(filtered_signal);
-%     title('Filtered Signal');
-%     xlabel('Time');
-%     ylabel('Amplitude');
-%     grid on;
-%     subplot(3, 1, 2)
-%     stem(abs(filtered_signal));
-%     title('Absolute of Filtered Signal');
-%     xlabel('Time');
-%     ylabel('Amplitude');
-%     grid on;
-%     subplot(3, 1, 3)
-%     stem(angle(filtered_signal));
-%     title('Phase of Filtered Signal');
-%     xlabel('Time');
-%     ylabel('Phase');
-%     grid on;
-% end
-%
 %% Homework3
 % As we see R=0.99 filter is similar to our input, but it has delay,
 % because our filter(differential) needs to save 4 datas before computing
@@ -172,7 +144,7 @@ for j = 1:3
 
     subplot(3, 2, 2 * j - 1)
     plot(y);
-    title(strcat(' after filter R =', string(R(j))));
+    title(strcat(' After filter R =', string(R(j))));
     hold on;
     grid on;
     subplot(3, 2, 2 * j)
@@ -204,7 +176,7 @@ for j = 1:3
 
     h = G / sin(w0) * R(j) .^ n .* sin(w0 * n + w0);
     disp(strcat('NRR for R =', string(R(j))))
-    disp('sum of h^2 signal:')
+    disp('Sum of H^2 signal:')
     a = sum(h .^ 2)
     disp(strcat('NRR for R =', string(R(j))))
     disp('Using the variance of signal:')
@@ -212,6 +184,6 @@ for j = 1:3
     va_x = var(x);
     a = va_y / va_x
     disp(strcat('NRR for R =', string(R(j))))
-    disp('Using formola:')
+    disp('Using formula:')
     answer = G ^ 2 / (2 * sin(w0) ^ 2) * ((1 / (1 - R(j) ^ 2) - (cos(2 * w0) - R(j) ^ 2) / (1 - 2 * R(j) ^ 2 * cos(2 * w0) + R(j) ^ 4)))
 end
