@@ -29,12 +29,18 @@ for i = 1:3
     title('Absolute Impulse response power 2');
     xlabel('Frequency');
     ylabel('Amplitude');
+    xlim([0 pi]);
+    xticks([0, pi / 2, pi]);
+    xticklabels({'0', '\pi/2', '\pi'});
     grid on;
     subplot(2, 1, 2)
-    plot(w, angle(H) .^ 2);
+    plot(w, angle(H) * 2);
     title('Phase of Impulse response power 2');
     xlabel('Frequency');
     ylabel('Phase');
+    xlim([0 pi]);
+    xticks([0, pi / 2, pi]);
+    xticklabels({'0', '\pi/2', '\pi'});
     grid on;
 end
 
@@ -43,194 +49,169 @@ end
 % by 3 different methods
 %
 % Firstly, we declare essential variables
+%
+% First we compute with differential equation
 for j = 1:3
+    G = (1 - R(j)) * (1 - 2 * R(j) * cos(2 * w0) + R(j) ^ 2) ^ (0.5);
     x = [1 zeros(1, 300)];
+    w1 = 0;
+    w2 = 0;
+    y = zeros(1, 301);
+    %%%
+    % Here we show output with three different methods for different R and plot them
+    for i = 1:301
+        y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        w2 = w1;
+        w1 = y(i);
+    end
+
+    figure('Name', 'Output');
+    subplot(3, 1, 1)
+    stem(y);
+    title(strcat('Diference equetion Output R =', string(R(j))));
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    subplot(3, 1, 2)
+    [h, n] = impz(G, [1 -2 * R(j) * cos(w0) R(j) ^ 2], 301);
+    stem(h)
+    title(strcat('Impz Output R =', string(R(j))));
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+    subplot(3, 1, 3)
+    n = 0:300;
+    h = G / sin(w0) * R(j) .^ n .* sin(w0 * n + w0);
+    stem(h)
+    title(strcat('direct compute Output R =', string(R(j))));
+    xlabel('Time');
+    ylabel('Amplitude');
+    grid on;
+end
+
+% %%%
+% % Here we simply filtered signal by filter we created and plot it
+% % ino nemidonam chieh
+% for i = 1:3
+%     filtered_signal = filter(G, [1 -2 * R(i) .* cos(w0) R(i) .^ 2], x);
+%     figure('Name', 'Filtered Signal');
+%     subplot(3, 1, 1)
+%     stem(filtered_signal);
+%     title('Filtered Signal');
+%     xlabel('Time');
+%     ylabel('Amplitude');
+%     grid on;
+%     subplot(3, 1, 2)
+%     stem(abs(filtered_signal));
+%     title('Absolute of Filtered Signal');
+%     xlabel('Time');
+%     ylabel('Amplitude');
+%     grid on;
+%     subplot(3, 1, 3)
+%     stem(angle(filtered_signal));
+%     title('Phase of Filtered Signal');
+%     xlabel('Time');
+%     ylabel('Phase');
+%     grid on;
+% end
+%
+%% Homework3
+% As we see R=0.99 filter is similar to our input, but it has delay,
+% because our filter(differential) needs to save 4 datas before computing
+% the answer
+
+figure('Name', 'Output');
+v = 1 * randn(1, 301);
+n = 0:300;
+x = v + cos(w0 * n);
+
+for j = 1:3
+    G = (1 - R(j)) * (1 - 2 * R(j) * cos(2 * w0) + R(j) ^ 2) ^ (0.5);
     w1 = 0;
     w2 = 0;
     y = zeros(1, 301);
     %%%
     % Here we show output by differential equation and plot it
     for i = 1:301
-        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
         w2 = w1;
         w1 = y(i);
     end
 
-    figure('Name', 'Output');
-    subplot(3, 1, 1)
-    stem(y);
-    title('Output');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    subplot(3, 1, 2)
-    stem(abs(y));
-    title('Absolute of Output');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    subplot(3, 1, 3)
-    stem(angle(y));
-    title('Phase of Output');
-    xlabel('Time');
-    ylabel('Phase');
-    grid on;
-
-end
-
-%%%
-% Here we simply filtered signal by filter we created and plot it
-for i = 1:3
-    filtered_signal = filter(G, [1 -2 * R(i) .* cos(w0) R(i) .^ 2], x);
-    figure('Name', 'Filtered Signal');
-    subplot(3, 1, 1)
-    stem(filtered_signal);
-    title('Filtered Signal');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    subplot(3, 1, 2)
-    stem(abs(filtered_signal));
-    title('Absolute of Filtered Signal');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    subplot(3, 1, 3)
-    stem(angle(filtered_signal));
-    title('Phase of Filtered Signal');
-    xlabel('Time');
-    ylabel('Phase');
-    grid on;
-end
-
-%% Homework3
-
-x = 0.1 * randn(1, 301);
-
-for j = 1:3
-    w1 = 0;
-    w2 = 0;
-    w21 = 0;
-    w11 = 0;
-    y = zeros(1, 301);
-    y1 = zeros(1, 301);
-    x1 = [1 zeros(1, 300)];
-
-    for i = 1:301
-        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
-        y1(i) = -2 * R(j) * cos(w0) * w11 -R(j) ^ 2 * w21 + G * x1(i);
-        w2 = w1;
-        w1 = y(i);
-        w21 = w11;
-        w11 = y1(i);
-    end
-
-    figure('Name', 'Output');
-    subplot(3, 1, 1)
+    subplot(3, 1, j)
     stem(y);
     hold on;
-    stem(y1);
-    title('Output');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    legend('Noise', 'Impulse Response');
-    subplot(3, 1, 2)
-    stem(abs(y));
-    hold on;
-    stem(abs(y1));
-    title('Absolute of Output');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    legend('Noise', 'Impulse Response');
-    subplot(3, 1, 3)
-    stem(angle(y));
-    hold on;
-    stem(angle(y1));
-    title('Phase of Output');
-    xlabel('Time');
-    ylabel('Phase');
-    grid on;
-    legend('Noise', 'Impulse Response');
+    stem(cos(w0 * n))
+    title(strcat('R =', string(R(j))));
+    legend('Noise Signal', 'Pure Cosine Signal');
 end
 
 %% Homework4
+figure('Name', 'Output');
+v = 1 * randn(1, 301);
+n = 0:300;
+x = v;
 
 for j = 1:3
+    G = (1 - R(j)) * (1 - 2 * R(j) * cos(2 * w0) + R(j) ^ 2) ^ (0.5);
     w1 = 0;
     w2 = 0;
     y = zeros(1, 301);
-
+    %%%
+    % Here we show output by differential equation and plot it
+    %
+    % * PSD Noise is DC and also PSD for delta func. is DC.
+    % * This is one of the reasons the noise after filter is cosine.
+    % * Another reason is, this filter is kind of a band-pass filter
+    % and lets some frequency pass
     for i = 1:301
-        y(i) = -2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
+        y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
         w2 = w1;
         w1 = y(i);
     end
 
-    figure('Name', 'Output');
-    subplot(3, 1, 1)
-    stem(y);
+    subplot(3, 2, 2 * j - 1)
+    plot(y);
+    title(strcat(' after filter R =', string(R(j))));
     hold on;
-    stem(x);
-    title('Output');
-    xlabel('Time');
-    ylabel('Amplitude');
     grid on;
-    legend('Filtered Noise', 'Noise');
-    subplot(3, 1, 2)
-    stem(abs(y));
-    hold on;
-    stem(abs(x));
-    title('Absolute of Output');
-    xlabel('Time');
-    ylabel('Amplitude');
+    subplot(3, 2, 2 * j)
+    plot(v)
+    title(strcat(' Noise R =', string(R(j))));
     grid on;
-    legend('Filtered Noise', 'Noise');
-    subplot(3, 1, 3)
-    stem(angle(y));
-    hold on;
-    stem(angle(x));
-    title('Phase of Output');
-    xlabel('Time');
-    ylabel('Phase');
-    grid on;
-    legend('Filtered Noise', 'Noise');
 end
 
 %% Homework5
-
-mean_noise = sum(x) / 301;
-mean_y = 0;
+% In this homework we want to see how the formula is valid
+%
+% Our purpose is how variance of noise before and after filtering
+% is related to square of filter
+v = 1 * randn(1, 1001);
+n = 0:1000;
+x = v;
 
 for j = 1:3
+    G = (1 - R(j)) * (1 - 2 * R(j) * cos(2 * w0) + R(j) ^ 2) ^ (0.5);
     w1 = 0;
     w2 = 0;
-    y = zeros(1, 301);
-    variance_noise = 0;
+    y = zeros(1, 1001);
 
-    for i = 1:301
+    for i = 1:1001
+        y(i) = 2 * R(j) * cos(w0) * w1 -R(j) ^ 2 * w2 + G * x(i);
         w2 = w1;
         w1 = y(i);
-        h = G / (sin(w0)) * (R(j) .^ i) * sin(w0 * i + w0);
-        y(i) = conv(h, x, 'same');
-        mean_y = (y(i) + mean_y) / 301;
-        variance_noise = ((x(i) - mean_noise) ^ 2) / 301 + variance_noise;
-        variance_y = (y(i) -mean_y) ^ 2/301;
-
     end
 
-    con = variance_y / variance_noise;
-    h_2 = h .^ 2;
-
-    figure('Name', 'Noise');
-    stem(h_2);
-    hold on;
-    stem(con);
-    title('Output');
-    xlabel('Time');
-    ylabel('Amplitude');
-    grid on;
-    legend('H^2', 'Variances Division');
-
+    h = G / sin(w0) * R(j) .^ n .* sin(w0 * n + w0);
+    disp(strcat('NRR for R =', string(R(j))))
+    disp('sum of h^2 signal:')
+    a = sum(h .^ 2)
+    disp(strcat('NRR for R =', string(R(j))))
+    disp('Using the variance of signal:')
+    va_y = var(y);
+    va_x = var(x);
+    a = va_y / va_x
+    disp(strcat('NRR for R =', string(R(j))))
+    disp('Using formola:')
+    answer = G ^ 2 / (2 * sin(w0) ^ 2) * ((1 / (1 - R(j) ^ 2) - (cos(2 * w0) - R(j) ^ 2) / (1 - 2 * R(j) ^ 2 * cos(2 * w0) + R(j) ^ 4)))
 end
