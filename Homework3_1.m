@@ -87,6 +87,11 @@ for j = 1:3
     grid on;
 end
 
+%%%
+%
+%
+%
+%
 %% Homework3
 % As we see R=0.99 filter is similar to our input, but it has delay,
 % because our filter(differential) needs to save 4 datas before computing
